@@ -50,6 +50,8 @@ import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
+import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
+
 import { Flow } from 'three/examples/jsm/modifiers/CurveModifier'
 //addons/modifiers/CurveModifier.js';
 
@@ -102,6 +104,7 @@ import { LineLoop } from "three";
 import { CatmullRomCurve3 } from "three";
 import { CurvePath } from "three";
 import { Clock } from "three";
+// import { render } from "express/lib/response";
 
 
 //Creates the Three.js scene
@@ -134,7 +137,9 @@ scene.add(directionalLight);
 //Sets up the renderer, fetching the canvas of the HTML
 const canvas = document.getElementById("three-canvas");
 const renderer = new WebGLRenderer({ canvas: canvas, alpha: true });
+
 renderer.setSize(size.width, size.height);
+renderer.xr.enabled = true;
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 
@@ -161,7 +166,8 @@ labelRenderer.domElement.style.top = '20rem';
 document.body.appendChild( labelRenderer.domElement );
 
 
-
+const vrBtn = VRButton.createButton(renderer);
+document.body.appendChild(vrBtn)
 
 //IFC Loading
 const ifcModels = [];
@@ -1113,8 +1119,8 @@ document.querySelectorAll('button').forEach(occurence => {
         }
 
         //.addEventListener('mousemove', pick( hightlightMaterial, false, ifcModels))
-        canvas.onmousemove = (event) => pick(event, hightlightMaterial, false, ifcModels);
-        canvas.ondblclick = (event) => pick(event, selectionMaterial, true, ifcModels);
+        canvas.onpointermove = (event) => pick(event, hightlightMaterial, false, ifcModels);
+        //canvas.ondblclick = (event) => pick(event, selectionMaterial, true, ifcModels);
         
     } else {
         uploadmodeIsActive = false;
@@ -1311,11 +1317,15 @@ document.querySelectorAll('button').forEach(occurence => {
             checkBtn.disabled = true
             checkBtn.style.visibility = 'hidden'
             buttonTxt.innerText = `` ;
-            canvas.ondblclick = (event) =>  console.log("hey") ;
+            
         }
+
+        canvas.onpointerdown = (event) =>  console.log("hey") ;
 
     } else {
         checkedBtnmodeIsActive = false;
+
+
         //console.log('checkedBtm False')
 
 
@@ -1324,8 +1334,8 @@ document.querySelectorAll('button').forEach(occurence => {
     }
 
     if(id === 'storymode'){
-        const uploadbtn = document.getElementById('storymode')
-        uploadbtn.onclick = clickedOnce('demo'," ",'dincheck-buttonhover', uploadbtn  )
+        // const uploadbtn = document.getElementById('storymode')
+        // uploadbtn.onclick = clickedOnce('demo'," ",'dincheck-buttonhover', uploadbtn  )
 
 
         storymodeIsActive = true;
@@ -1429,8 +1439,8 @@ document.querySelectorAll('button').forEach(occurence => {
     }
 
     if (id === 'dincheckmode'){
-        const uploadbtn = document.getElementById('dincheckmode')
-        uploadbtn.onclick = clickedOnce('demo'," ",'dincheck-buttonhover', uploadbtn  )
+        // const uploadbtn = document.getElementById('dincheckmode')
+        // uploadbtn.onclick = clickedOnce('demo'," ",'dincheck-buttonhover', uploadbtn  )
 
         dincheckmodeIsActive = true
         const sizeArea = 1.5;
@@ -2694,7 +2704,7 @@ const animate = () => {
 
     if(furnituremodeIsActive === true ){
 
-        canvas.ondblclick = (event) =>  pickFurniture(event, selectionMaterialFurniture ,allSubsetMeshes ) ;
+        canvas.onpointerup = (event) =>  pickFurniture(event, selectionMaterialFurniture ,allSubsetMeshes ) ;
 
 
     }
@@ -2787,17 +2797,17 @@ const animate = () => {
         // //console.log("ifcPr", ifcProject)
         // createTreeMenu(ifcProject)
         
-        canvas.onmousemove = (event) => collisionCheckLoop ();
+        canvas.onpointermove = (event) => collisionCheckLoop ();
 
 
         function collisionCheckLoop () {
 
             if(areas.length >= 1){
 
-                canvas.ondblclick = (event) =>  pickFurnitureSecond(event, allSubsetMeshes, areas) ; //cubes
+                canvas.onpointerdown = (event) =>  pickFurnitureSecond(event, allSubsetMeshes, areas) ; //cubes
                 ////console.log(allSubsetMeshes)
                 
-                canvas.onmouseup = (event) => {
+                canvas.onpointerup = (event) => {
                     const spherePos = allSubsetMeshes[lastIndex].children[0].getWorldPosition(new Vector3())
                     const vectorDir = new Vector3( areas[lastIndex].position.z - spherePos.z ,areas[lastIndex].position.x - spherePos.x , 0)
                     console.log( "R else", areas[lastIndex].uuid, spherePos, vectorDir.normalize())
@@ -2969,7 +2979,11 @@ const animate = () => {
 
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
-    requestAnimationFrame(animate);
+
+    renderer.setAnimationLoop( function(){
+        renderer.render(scene, camera);
+    });
+    //requestAnimationFrame(animate);
 };
 
 
@@ -4558,15 +4572,9 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
         problembtn.textContent = '❗️DIN-Verstoß';
         problembtn.className = 'problemcontainer';
     
-
-    
-
-    
         for(let id = 0; id < areas.length; id++){
     
             //labelBase.textContent = moreInfo.toString()
-    
-    
             const labelObject = new CSS2DObject(problembtn);
     
             labelObject.uuid = areas[id].uuid
@@ -4578,8 +4586,6 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
         if( areas[id].uuid === searchID) {
             //console.log("hello area",  areas[id].uuid, collisionID, areas[id], ReferenceDirections[id], specificFurnIDList)
              // Create video and play
-
-            
                 labels[id].position.set(areas[id].position.x + 0.3,areas[id].position.y ,areas[id].position.z )
                 //areas[id].add(labels[l])
                 scene.add(labels[id])
@@ -4589,11 +4595,6 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
         } 
 
     }
-    
-    
-    
-    
-    
     
     }
     
@@ -4751,7 +4752,6 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
                         if( areas[id].uuid !== searchID) {
                             for(let mat = 0; mat < checkedMats.length; mat++){
                                 areas[id].material = checkedMats[id];
-
                                 areas[id].position.set( areas[id].position.x, 0.0 ,  areas[id].position.z)
 
 
@@ -4799,7 +4799,6 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
             }
 
 
-
     async function specificAnimation( IntersectionsIDsTest, source, noIntersectionsIDs, firstMaterial, index, name, width, depth) {
         
         if(IntersectionsIDsTest.includes(foundMeshesCheckbox[index]) === true){
@@ -4813,7 +4812,7 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
             async function extraAnimationArea(nameFurn, nameFurn2, indexFurniture,indexFurniture2,  sourceVideo1, sourceVideo2, sourceVideo3, sourceVideo4){
                 //console.log(foundMeshesCheckbox[indexFurniture] , foundMeshesCheckbox[indexFurniture2] )
                
-                if(name == nameFurn || name == nameFurn2){
+                if(name === nameFurn || name == nameFurn2){
                     for(let id = 0; id < areas.length; id++){
                         if(IntersectionsIDsTest.includes(foundMeshesCheckbox[indexFurniture]) === true){
                             if(searchID === foundMeshesCheckbox[indexFurniture] ){
@@ -5094,7 +5093,6 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
 
     async function changeAreaToAnimaton(firstOcc, IntersectionsIDsTest, source, noIntersectionsIDsTest, firstMaterial, width, depth) {
         
-
         if(firstOcc === true) {
             loader.ifcManager.removeSubset(0,  greenMaterial);
             for(let i = 0; i < IntersectionsIDsTest.length; i++){
@@ -5102,22 +5100,18 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
                 const collisionID = IntersectionsIDsTest[i]
 
                 if (collisionID === searchID){
-                    ////console.log("here we go", collisionID, searchID, indicesIntersectFurnAndArea[i])
+                    console.log("here we go", collisionID,)
                                
                    
                     for(let id = 0; id < areas.length; id++){
 
                             //labelBase.textContent = moreInfo.toString()
         
-                                    //console.log("ID Position", areas[id].position, areas[id], areas, id)
+                        console.log("ID Position", areas[id].uuid ,collisionID)
                              
                         if( areas[id].uuid === collisionID) {
-                            //console.log("hello area",  areas[id].uuid, collisionID, areas[id], ReferenceDirections[id], specificFurnIDList)
+                            console.log("hello area",  areas[id].uuid, collisionID, areas[id], ReferenceDirections[id], specificFurnIDList)
                              // Create video and play
-
-                            
-                            
-
                             //if(collisionID == )
                             let videoSource
                             for (let video = 0; video < source.length; video++){
@@ -5146,19 +5140,6 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
                             const Videomaterial = videoMaterial(videoSource,  width, depth)
 
                             function videoMaterial(source,  width, depth){
-                                
-
-
-                                
-                                // scene.add(labelObjects[1]);
-
-                              
-
-                        
-
-                                //scene.add(labelObject)
-
-
 
                                 let textureVid = document.createElement("video")
 
@@ -5203,33 +5184,21 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
                             //console.log("heigt", allSubsetMeshes[id], allSubsetMeshes[id].geometry.boundingBox.max.y, areas[id])
                             areas[id].position.set( areas[id].position.x, allSubsetMeshes[id].geometry.boundingBox.max.y,  areas[id].position.z)
 
-                            
-
-                                    // labelBase.onclick = () => {
-                                    //     labelObject.removeFromParent();
-                                    //     labelObject.element = null;
-                                    //     labelBase.remove();
-                                    // }
-                                    //labelObject.position.set(areas[id].position.x, areas[id].position.y , areas[id].position.z)
-                                
-                            
 
 
 
 
+                        } 
+                        // else if( areas[id].uuid !== collisionID) {
+                        //     console.log("else if",  areas[id].uuid, collisionID)
+                        //     for(let mat = 0; mat < checkedMats.length; mat++){
+                        //         areas[id].material = checkedMats[id];
+
+                        //         areas[id].position.set( areas[id].position.x, 0.0 ,  areas[id].position.z)
 
 
-
-                        } else if( areas[id].uuid !== collisionID) {
-
-                            for(let mat = 0; mat < checkedMats.length; mat++){
-                                areas[id].material = checkedMats[id];
-
-                                areas[id].position.set( areas[id].position.x, 0.0 ,  areas[id].position.z)
-
-
-                            }
-                        }
+                        //     }
+                        // }
 
                     }
 
@@ -5253,14 +5222,17 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
                 }
             }
         } else if(firstOcc === false) {
+
             loader.ifcManager.removeSubset(0,  secondMaterial);
 
             for(let k = 0; k < noIntersectionsIDsTest.length; k++){
 
                 const collisionID = noIntersectionsIDsTest[k]
+                
                 ////console.log("collisionID NOs", collisionID, noIntersectionsIDsFurnIntersectArea)
                 // remove animationmateral
                 for(let id = 0; id < areas.length; id++){
+               
                     if( areas[id].uuid !== searchID) {
                         for(let mat = 0; mat < checkedMats.length; mat++){
                             areas[id].material = checkedMats[id];
@@ -5269,20 +5241,21 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
                         }
                     }
                 }
+            
 
-                if (collisionID === searchID){
-                    ////console.log("here we go", collisionID, searchID, indicesIntersectFurnAndArea[i])
+                // if (collisionID === searchID){
+                //     ////console.log("here we go", collisionID, searchID, indicesIntersectFurnAndArea[i])
 
 
-                    const subs2 = loader.ifcManager.createSubset({
-                        modelID: model.modelID,
-                        ids: [ searchID ],
-                        material: greenMaterial,
-                        scene,
-                        removePrevious: true,
-                    });
+                //     const subs2 = loader.ifcManager.createSubset({
+                //         modelID: model.modelID,
+                //         ids: [ searchID ],
+                //         material: greenMaterial,
+                //         scene,
+                //         removePrevious: true,
+                //     });
 
-                }
+                // }
             }
         }
 
@@ -6878,15 +6851,15 @@ async function createSimpleChild(parent, node) {
 
     collisionTypeText(intersectionidHTML, noIntersectionsIDs, childNode,'#C70039', content, parent)
 
-    childNode.onmouseenter =  (event) => prepickByID(event, hightlightMaterial, hightlightMaterialSecond, [node.expressID]);
+    childNode.onpointerenter =  (event) => prepickByID(event, hightlightMaterial, hightlightMaterialSecond, [node.expressID]);
 
-    parent.onclick =  (event) => pickCheckbox(event, hightlightMaterial, hightlightMaterialSecond, [node.expressID]);
+    parent.onpointerup =  (event) => pickCheckbox(event, hightlightMaterial, hightlightMaterialSecond, [node.expressID]);
 
         //await loader.ifcManager.selector.prepickIfcItemsByID(0, [node.expressID])
 
 
-    childNode.ondblclick =  (event) => pickByIDClick(event, selectionMaterial, hightlightMaterialSecond, [node.expressID]);
-    canvas.ondblclick = (event) =>  pickFurnitureSecond(event, allSubsetMeshes, areas) ; //cubes
+    childNode.onpointerdown =  (event) => pickByIDClick(event, selectionMaterial, hightlightMaterialSecond, [node.expressID]);
+    //canvas.ondblclick = (event) =>  pickFurnitureSecond(event, allSubsetMeshes, areas) ; //cubes
 
 }
 function checkRadioValue(event, radiobuttons){
