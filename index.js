@@ -166,8 +166,8 @@ labelRenderer.domElement.style.top = '20rem';
 document.body.appendChild( labelRenderer.domElement );
 
 
-// const vrBtn = VRButton.createButton(renderer);
-// document.body.appendChild(vrBtn)
+const vrBtn = VRButton.createButton(renderer);
+document.body.appendChild(vrBtn)
 
 //IFC Loading
 const ifcModels = [];
