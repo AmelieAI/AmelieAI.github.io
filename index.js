@@ -139,7 +139,7 @@ const canvas = document.getElementById("three-canvas");
 const renderer = new WebGLRenderer({ canvas: canvas, alpha: true });
 
 renderer.setSize(size.width, size.height);
-renderer.xr.enabled = true;
+// renderer.xr.enabled = true;
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 
@@ -166,8 +166,8 @@ labelRenderer.domElement.style.top = '20rem';
 document.body.appendChild( labelRenderer.domElement );
 
 
-const vrBtn = VRButton.createButton(renderer);
-document.body.appendChild(vrBtn)
+// const vrBtn = VRButton.createButton(renderer);
+// document.body.appendChild(vrBtn)
 
 //IFC Loading
 const ifcModels = [];
@@ -374,6 +374,7 @@ const specificFurnIDList = [];
 const areasInFront = [];
 const boundingCubesInFront = [];
 
+const labels = [];
 
 const curveHandles = [];
 let allLists;
@@ -1317,14 +1318,14 @@ document.querySelectorAll('button').forEach(occurence => {
             checkBtn.disabled = true
             checkBtn.style.visibility = 'hidden'
             buttonTxt.innerText = `` ;
-            
+            canvas.onpointerup = (event) =>  console.log("hey1") ;
         }
 
-        canvas.onpointerdown = (event) =>  console.log("hey") ;
+        //canvas.onpointerup = (event) =>  console.log("hey") ;
 
     } else {
         checkedBtnmodeIsActive = false;
-
+        
 
         //console.log('checkedBtm False')
 
@@ -1339,6 +1340,17 @@ document.querySelectorAll('button').forEach(occurence => {
 
 
         storymodeIsActive = true;
+        hightlightMaterialSecond.opacity = 0.0;
+        for(let id = 0; id < areas.length; id++){
+               
+           
+                for(let mat = 0; mat < checkedMats.length; mat++){
+                    areas[id].material = checkedMats[id];
+                    areas[id].position.set( areas[id].position.x, 0.0 ,  areas[id].position.z)
+
+                }
+            
+        }
 
 
         for(let ref = 0; ref < areas.length; ref++){
@@ -1439,9 +1451,9 @@ document.querySelectorAll('button').forEach(occurence => {
     }
 
     if (id === 'dincheckmode'){
-        // const uploadbtn = document.getElementById('dincheckmode')
-        // uploadbtn.onclick = clickedOnce('demo'," ",'dincheck-buttonhover', uploadbtn  )
-
+        const uploadbtn = document.getElementById('dincheckmode')
+        uploadbtn.onclick = clickedOnce('demo'," ",'dincheck-buttonhover', uploadbtn  )
+        canvas.ondblclick = (event) =>  console.log("hey") ;
         dincheckmodeIsActive = true
         const sizeArea = 1.5;
         for (let id = 0; id < specificFurnIDList.length; id++){
@@ -1831,10 +1843,11 @@ document.querySelectorAll('button').forEach(occurence => {
         //     //console.log("boundingCubesInFront", boundingCubesInFront)
         // }
 
-
+        
 
 
     } else {
+        
         checkallmodeIsActive = false
         dincheckmodeIsActive = false
         //console.log("checkallmode activated", checkallmodeIsActive)
@@ -1853,63 +1866,7 @@ document.querySelectorAll('button').forEach(occurence => {
 
         DINCHECKER()
 
-        // for(let i = 0; i < boundingCubes.length; i++){
-        //     //indexedBoundingBox(i)
-        //     // check if any collisions are there and fills Lists if any
-        //     indexedBoundingBoxCollision(i, boundingCubes, boundingCubes, checkedList,indices,checkedListContains, indicesContains)
-        //     indexedBoundingBoxCollision(i, subsetBoundingBoxes, subsetBoundingBoxes, checkedListIntersectFurn, indicesIntersectFurn,checkedListContainsFurn, indicesContainsFurn)
-        //     indexedBoundingBoxCollision(i, subsetBoundingBoxes, boundingCubes, checkedListIntersectFurnAndArea,indicesIntersectFurnAndArea,checkedListContainsFurnAndArea, indicesContainsFurnAndArea)
-        //     indexedBoundingBoxCollision(i, boundingCubes, subsetBoundingBoxes, checkedListIntersectAreaAndFurn,indicesIntersectAreaAndFurn,checkedListContainsAreaAndFurn, indicesContainsAreaAndFurn)
-
-        // }
-        // // for(let i = 0; i < boundingCubesInFront.length; i++){
-        // //     //indexedBoundingBox(i)
-        // //     // check if any collisions are there and fills Lists if any
-        // //     indexedBoundingBoxCollision(i, boundingCubesInFront, boundingCubes, checkedListInFront,indicesInFront,checkedListContainsInFront, indicesContainsInFront)
-        // //     indexedBoundingBoxCollision(i, boundingCubesInFront, boundingCubesInFront, checkedListIntersectFurnInFront, indicesIntersectFurnInFront,checkedListContainsFurnInFront, indicesContainsFurnInFront)
-        // //     indexedBoundingBoxCollision(i, subsetBoundingBoxes, boundingCubesInFront, checkedListIntersectFurnAndAreaInFront,indicesIntersectFurnAndAreaInFront,checkedListContainsFurnAndAreaInFront, indicesContainsFurnAndAreaInFront)
-        // // }
-
-
-        // for(let i = 0; i < wallBounds.length; i++){
-        //         indexedBoundingBoxCollision(i, boundingCubes, wallBounds, checkedListAreaIntersectWall,indicesIntersectAreaAndWall,checkedListAreaContainsWall, indicesContainsAreaAndWall)
-        //         indexedBoundingBoxCollision(i, subsetBoundingBoxes, wallBounds, checkedListFurnIntersectWall,indicesIntersectFurnAndWall,checkedListFurnContainsWall, indicesContainsFurnAndWall)
-
-        // }
-
-
-        // areaColorIfCollisionIsDetectedWithWall(checkedListAreaIntersectWall, indicesIntersectAreaAndWall, wallCollisionColor, allIdsFalseAreaIntersectWall, falsePositionsAreaIntersectWall, IntersectionsIDsAreaIntersectWall, noIntersectionsIDsAreaIntersectWall, IntersectionsIDsAreaIntersectWallWith, wallSubsetMeshes)
-        // areaColorIfCollisionIsDetectedWithWall(checkedListAreaContainsWall, indicesContainsAreaAndWall, wallCollisionColor, allIdsFalseAreaContainsWall, falsePositionsAreaContainsWall, IntersectionsIDsAreaContainWall, noIntersectionsIDsAreaContainWall, IntersectionsIDsAreaContainWallWith, wallSubsetMeshes)
-
-        // areaColorIfCollisionIsDetectedWithWall(checkedListFurnIntersectWall, indicesIntersectFurnAndWall, wallCollisionColor , allIdsFalseFurnIntersectWall, falsePositionsFurnIntersectWall,IntersectionsIDsFurnIntersectWall , noIntersectionsIDsFurnIntersectWall, IntersectionsIDsFurnIntersectWallWith, wallSubsetMeshes)
-        // areaColorIfCollisionIsDetectedWithWall(checkedListFurnContainsWall, indicesContainsFurnAndWall, wallCollisionColor, allIdsFalseFurnContainsWall, falsePositionsFurnContainsWall,IntersectionsIDsFurnContainWall, noIntersectionsIDsFurnContainWall, IntersectionsIDsFurnContainWallWith, wallSubsetMeshes)
-
-
-        // areaColorIfCollisionIsDetected(checkedList, indices, areaIntersectAreaColor, allIdsFalseAreaIntersectArea, falsePositionsAreaIntersectArea, IntersectionsIDsAreaIntersectArea, noIntersectionsIDsAreaIntersectArea, IntersectionsIDsAreaIntersectAreaWith, allSubsetMeshes)
-        // areaColorIfCollisionIsDetected(checkedListContains, indicesContains, areaContainAreaColor, allIdsFalseAreaContainsArea, falsePositionsAreaContainsArea, IntersectionsIDsAreaContainArea, noIntersectionsIDsAreaContainArea, IntersectionsIDsAreaContainAreaWith, allSubsetMeshes )
-
-
-        // areaColorIfCollisionIsDetected(checkedListIntersectFurn, indicesIntersectFurn, furnIntersectFurnColor, allIdsFalseFurnIntersectFurn, falsePositionsFurnIntersectFurn, IntersectionsIDsFurnIntersectFurn,noIntersectionsIDsFurnIntersectFurn, IntersectionsIDsFurnIntersectFurnWith, allSubsetMeshes )
-        // areaColorIfCollisionIsDetected(checkedListContainsFurn, indicesContainsFurn, furnContainFurnColor, allIdsFalseFurnContainsFurn, falsePositionsFurnContainsFurn, IntersectionsIDsFurnContainFurn, noIntersectionsIDsFurnContainFurn, IntersectionsIDsFurnContainFurnWith, allSubsetMeshes)
-
-        // areaColorIfCollisionIsDetected(checkedListIntersectFurnAndArea, indicesIntersectFurnAndArea, furnClashAreaColor, allIdsFalseAreaIntersectFurn, falsePositionsAreaIntersectFurn, IntersectionsIDs, noIntersectionsIDs, IntersectionsIDsWith, allSubsetMeshes)
-        // areaColorIfCollisionIsDetected(checkedListContainsFurnAndArea, indicesContainsFurnAndArea, furnContainAreaColor, allIdsFalseAreaContainsFurn, falsePositionsAreaContainsFurn,IntersectionsIDsAreaContainFurn, noIntersectionsIDsAreaContainFurn, IntersectionsIDsAreaContainFurnWith, allSubsetMeshes )
-
-        // areaColorIfCollisionIsDetected(checkedListIntersectAreaAndFurn, indicesIntersectAreaAndFurn, furnClashAreaColor, allIdsFalseFurnIntersectArea, falsePositionsFurnIntersectArea, IntersectionsIDsFurnIntersectArea, noIntersectionsIDsFurnIntersectArea, IntersectionsIDsFurnIntersectAreaWith, allSubsetMeshes)
-        // areaColorIfCollisionIsDetected(checkedListContainsAreaAndFurn, indicesContainsAreaAndFurn, furnContainAreaColor, allIdsFalseFurnContainsArea, falsePositionsFurnContainsArea,IntersectionsIDsFurnContainArea, noIntersectionsIDsFurnContainArea, IntersectionsIDsFurnContainAreaWith, allSubsetMeshes )
-
-
-        // areaColorIfCollisionIsDetectedInFront(checkedListInFront, indicesInFront, areaIntersectAreaColor, allIdsFalseAreaIntersectAreaInFront, falsePositionsAreaIntersectAreaInFront, IntersectionsIDsAreaIntersectAreaInFront, noIntersectionsIDsAreaIntersectAreaInFront, IntersectionsIDsAreaIntersectAreaWithInFront, allSubsetMeshes)
-        // areaColorIfCollisionIsDetectedInFront(checkedListContainsInFront, indicesContainsInFront, areaContainAreaColor, allIdsFalseAreaContainsAreaInFront, falsePositionsAreaContainsAreaInFront, IntersectionsIDsAreaContainAreaInFront, noIntersectionsIDsAreaContainAreaInFront, IntersectionsIDsAreaContainAreaWithInFront, allSubsetMeshes )
-
-        // areaColorIfCollisionIsDetectedInFront(checkedListIntersectFurnInFront, indicesIntersectFurnInFront, furnIntersectFurnColor, allIdsFalseFurnIntersectFurnInFront, falsePositionsFurnIntersectFurnInFront, IntersectionsIDsFurnIntersectFurnInFront,noIntersectionsIDsFurnIntersectFurnInFront, IntersectionsIDsFurnIntersectFurnWithInFront, allSubsetMeshes )
-        // areaColorIfCollisionIsDetectedInFront(checkedListContainsFurnInFront, indicesContainsFurnInFront, furnContainFurnColor, allIdsFalseFurnContainsFurnInFront, falsePositionsFurnContainsFurnInFront, IntersectionsIDsFurnContainFurnInFront, noIntersectionsIDsFurnContainFurnInFront, IntersectionsIDsFurnContainFurnWithInFront, allSubsetMeshes)
-
-        // areaColorIfCollisionIsDetectedInFront(checkedListIntersectFurnAndAreaInFront, indicesIntersectFurnAndAreaInFront, furnClashAreaColor, allIdsFalseAreaIntersectFurnInFront, falsePositionsAreaIntersectFurnInFront, IntersectionsIDsInFront, noIntersectionsIDsInFront, IntersectionsIDsWithInFront, allSubsetMeshes)
-        // areaColorIfCollisionIsDetectedInFront(checkedListContainsFurnAndAreaInFront, indicesContainsFurnAndAreaInFront, furnContainAreaColor, allIdsFalseAreaContainsFurnInFront, falsePositionsAreaContainsFurnInFront,IntersectionsIDsAreaContainFurnInFront, noIntersectionsIDsAreaContainFurnInFront, IntersectionsIDsAreaContainFurnWithInFront, allSubsetMeshes )
-
-
-
+ 
 
         translateAreaIfCollision(specificFurnIDList, 2, 0.6, 0.6)
         translateAreaIfCollision(specificFurnIDList, 0, 0.3, 0.3)
@@ -2167,53 +2124,13 @@ const subsetBoundingBoxes = [];
 
 async function pickFurnitureSecond(event, furnitureMeshes, areasMeshes ) {
     
-    // const found = castObjects(event, areasMeshes)[0];
-    // //console.log("found Mesh", found, furnituremodeIsActive)
-    // if(found) {
-    //     const index = found.faceIndex;
-    //     // //console.log("index", index)
-    //     lastFurniture = found.object;
-    //     console.log(lastFurniture)
-
-    //     const geometry = found.object.geometry;
-
-    //     const indexFurn = furnitureMeshes[lastIndex]
-
-    //     const gumballPosition =  gumball.position.set(found.point.x,found.point.y, found.point.z)
-
-    //     let center = new Vector3(0,0,0);
-    //     center = geometry.boundingBox.getCenter(center);
+    for(let l = 0; l < labels.length; l++){
+        //areas[id].add(labels[l])
+        scene.remove(labels[l])
         
-    //     gumball.position.set(center.x, center.y, center.z)
-    //     gumball.setSpace('local');
-    //     // center = bbox.getCenter(center);
-    //     // center.sub(meshGroup.position);
-    //     // transformControl.position.set(center.x, center.y, center.z);
-    //     // transformControl.attach(meshGroup);
-    //     //move area around
-
-    //     //gumball.position.set(gumballPosition.x - lastFurniture.position.x, gumballPosition.y, gumballPosition.z - lastFurniture.position.z)
-
-    //     selectedCube.push(found.object)
-    //     lastIndex = areasMeshes.indexOf(found.object)
-    //     //console.log("lastIndex", lastIndex)
-
-    //     //move furniture around
-    //     gumball.attach(lastFurniture)
-    //     ////console.log("Position", lastFurniture.position, furnitureMeshes[lastIndex].position)
-    //     const lastPosition = lastFurniture.position
-
-    //     //furnitureMeshes[lastIndex].position.set(-lastPosition.x, lastPosition.y, -lastPosition.z)
-    //     ////console.log("Position2", lastFurniture.position, furnitureMeshes[lastIndex].position)
-    //     console.log("furn1", furnitureMeshes[lastIndex], lastFurniture)
-    //     furnitureMeshes[lastIndex].position.set(-lastPosition.x, lastPosition.y, -lastPosition.z)
-    //     lastFurniture.add(furnitureMeshes[lastIndex])
-    //     console.log("furn2", furnitureMeshes[lastIndex], lastFurniture)
-
-
-    //     //lastFurniture.position.set(lastPosition.x, lastPosition.y, lastPosition.z)
-    //     scene.add(gumball)
-
+    }
+    labels.length = 0
+    
     const found = castObjects(event, furnitureMeshes)[0];
     //console.log("found Mesh", found, furnituremodeIsActive)
     if(found) {
@@ -2223,6 +2140,10 @@ async function pickFurnitureSecond(event, furnitureMeshes, areasMeshes ) {
         console.log(lastFurniture)
 
         const geometry = found.object.geometry;
+
+
+            
+        
 
 
         //const gumballPosition =  gumball.position.set(found.point.x,found.point.y, found.point.z)
@@ -2288,6 +2209,8 @@ async function pickFurnitureSecond(event, furnitureMeshes, areasMeshes ) {
         
         //lastFurniture.position.set(lastPosition.x, lastPosition.y, lastPosition.z)
         scene.add(gumball)
+
+      
 
        
 
@@ -2704,7 +2627,7 @@ const animate = () => {
 
     if(furnituremodeIsActive === true ){
 
-        canvas.onpointerup = (event) =>  pickFurniture(event, selectionMaterialFurniture ,allSubsetMeshes ) ;
+        canvas.ondblclick = (event) =>  pickFurniture(event, selectionMaterialFurniture ,allSubsetMeshes ) ;
 
 
     }
@@ -2980,10 +2903,10 @@ const animate = () => {
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
 
-    renderer.setAnimationLoop( function(){
-        renderer.render(scene, camera);
-    });
-    //requestAnimationFrame(animate);
+    // renderer.setAnimationLoop( function(){
+    //     renderer.render(scene, camera);
+    // });
+    requestAnimationFrame(animate);
 };
 
 
@@ -4542,10 +4465,10 @@ const areaNewList = [];
 const areaNewList2 = [];
 const wallClashmaterial = new MeshBasicMaterial({color: wallCollisionColor, transparent: true,  opacity: 0.5, depthTest: true})
 const wallCollisionName = ['Dusche Wand','Küche Wand', 'Badewanne Wand', 'Waschtisch Wand', 'Bett Wand', 'WC Wand']
-const labels = [];
+
 
 async function prepickByID(event, material, secondMaterial,Expressid ) {
-
+    loader.ifcManager.removeSubset(0, secondMaterial);
     loader.ifcManager.removeSubset(0, wallClashmaterial);
     for(let l = 0; l < labels.length; l++){
         //areas[id].add(labels[l])
@@ -4589,11 +4512,45 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
                 labels[id].position.set(areas[id].position.x + 0.3,areas[id].position.y ,areas[id].position.z )
                 //areas[id].add(labels[l])
                 scene.add(labels[id])
+
+                await  specificAnimation( IntersectionsIDs, kitchenanimations, noIntersectionsIDs, furnClashAreaColor, 1, 'Küche', 1.5, 1.5)
+                await  specificAnimation( IntersectionsIDs, showeranimations, noIntersectionsIDs, furnClashAreaColor, 5, 'Dusche', 1.5, 1.5)
+                await  specificAnimation( IntersectionsIDs, tubeanimations, noIntersectionsIDs, furnClashAreaColor, 4, 'Badewanne', 1.5, 1.5)
+                await  specificAnimation( IntersectionsIDs, sinkanimations, noIntersectionsIDs, furnClashAreaColor, 3, 'Waschtisch', 1.5, 1.5)
+                await  specificAnimation( IntersectionsIDs, bedanimations, noIntersectionsIDs, furnClashAreaColor, 0, 'Bett',  4.5, 3.5)
+                await  specificAnimation( IntersectionsIDs, wcanimations, noIntersectionsIDs, furnClashAreaColor, 2, 'WC', 1.5, 1.5)
+            
+                // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 1, 'Küche Wand', 1.5, 1.5)
+                // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 5, 'Dusche Wand', 1.5, 1.5)
+                // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 4, 'Badewanne Wand', 1.5, 1.5)
+                // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 3, 'Waschtisch Wand', 1.5, 1.5)
+                // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 0, 'Bett Wand', 4.5, 3.5)
+                // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 2, 'WC Wand', 1.5, 1.5)
+            
+                await  specificAnimation( IntersectionsIDsFurnIntersectArea, kitchenanimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 1, 'Küche', 1.5, 1.5)
+                await  specificAnimation( IntersectionsIDsFurnIntersectArea, showeranimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 5, 'Dusche', 1.5, 1.5)
+                await  specificAnimation( IntersectionsIDsFurnIntersectArea, tubeanimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 4, 'Badewanne', 1.5, 1.5)
+                await  specificAnimation( IntersectionsIDsFurnIntersectArea, sinkanimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 3, 'Waschtisch', 1.5, 1.5)
+                await  specificAnimation( IntersectionsIDsFurnIntersectArea, bedanimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 0, 'Bett',  4.5, 3.5)
+                await  specificAnimation( IntersectionsIDsFurnIntersectArea, wcanimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 2, 'WC', 1.5, 1.5)
+            
+            
                 
             
             
         } 
+        indexID = noSpecificFurnIDList.indexOf(areas[id].uuid);
+        if(noSpecificFurnIDList[indexID] === searchID ){
+            console.log("SONSTIGE")
+            const Videomaterial = videoMaterial(otheranimations[0], 1.5, 1.5, id)
+                        //for(let mat = 0; mat < checkedMats.length; mat++){
+            areas[id].material = Videomaterial;
 
+            areas[id].position.set( areas[id].position.x, 1 ,  areas[id].position.z)
+    
+        }
+     
+       
     }
     
     }
@@ -4802,7 +4759,7 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
     async function specificAnimation( IntersectionsIDsTest, source, noIntersectionsIDs, firstMaterial, index, name, width, depth) {
         
         if(IntersectionsIDsTest.includes(foundMeshesCheckbox[index]) === true){
-            //console.log("name", name, foundMeshesCheckbox[index])
+            console.log("name", name, foundMeshesCheckbox[index], specificFurnIDList, foundMeshesCheckbox,)
 
             const firstOcc = includesIDinList([foundMeshesCheckbox[index]])
            
@@ -4811,8 +4768,8 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
         
             async function extraAnimationArea(nameFurn, nameFurn2, indexFurniture,indexFurniture2,  sourceVideo1, sourceVideo2, sourceVideo3, sourceVideo4){
                 //console.log(foundMeshesCheckbox[indexFurniture] , foundMeshesCheckbox[indexFurniture2] )
-               
-                if(name === nameFurn || name == nameFurn2){
+                console.log(name, nameFurn, nameFurn2)
+                if(name === nameFurn || name === nameFurn2){
                     for(let id = 0; id < areas.length; id++){
                         if(IntersectionsIDsTest.includes(foundMeshesCheckbox[indexFurniture]) === true){
                             if(searchID === foundMeshesCheckbox[indexFurniture] ){
@@ -5031,32 +4988,12 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
 
 
 
+
         }
     }
 
 
 
-
-    await  specificAnimation( IntersectionsIDs, kitchenanimations, noIntersectionsIDs, furnClashAreaColor, 1, 'Küche', 1.5, 1.5)
-    await  specificAnimation( IntersectionsIDs, showeranimations, noIntersectionsIDs, furnClashAreaColor, 5, 'Dusche', 1.5, 1.5)
-    await  specificAnimation( IntersectionsIDs, tubeanimations, noIntersectionsIDs, furnClashAreaColor, 4, 'Badewanne', 1.5, 1.5)
-    await  specificAnimation( IntersectionsIDs, sinkanimations, noIntersectionsIDs, furnClashAreaColor, 3, 'Waschtisch', 1.5, 1.5)
-    await  specificAnimation( IntersectionsIDs, bedanimations, noIntersectionsIDs, furnClashAreaColor, 0, 'Bett',  4.5, 3.5)
-    await  specificAnimation( IntersectionsIDs, wcanimations, noIntersectionsIDs, furnClashAreaColor, 2, 'WC', 1.5, 1.5)
-
-    // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 1, 'Küche Wand', 1.5, 1.5)
-    // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 5, 'Dusche Wand', 1.5, 1.5)
-    // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 4, 'Badewanne Wand', 1.5, 1.5)
-    // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 3, 'Waschtisch Wand', 1.5, 1.5)
-    // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 0, 'Bett Wand', 4.5, 3.5)
-    // await  specificAnimation( IntersectionsIDsAreaIntersectWall, wallanimations, noIntersectionsIDs, furnClashAreaColor, 2, 'WC Wand', 1.5, 1.5)
-
-    await  specificAnimation( IntersectionsIDsFurnIntersectArea, kitchenanimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 1, 'Küche', 1.5, 1.5)
-    await  specificAnimation( IntersectionsIDsFurnIntersectArea, showeranimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 5, 'Dusche', 1.5, 1.5)
-    await  specificAnimation( IntersectionsIDsFurnIntersectArea, tubeanimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 4, 'Badewanne', 1.5, 1.5)
-    await  specificAnimation( IntersectionsIDsFurnIntersectArea, sinkanimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 3, 'Waschtisch', 1.5, 1.5)
-    await  specificAnimation( IntersectionsIDsFurnIntersectArea, bedanimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 0, 'Bett',  4.5, 3.5)
-    await  specificAnimation( IntersectionsIDsFurnIntersectArea, wcanimations, noIntersectionsIDsFurnIntersectArea, furnClashAreaColor, 2, 'WC', 1.5, 1.5)
 
 
    
@@ -5079,6 +5016,8 @@ async function prepickByID(event, material, secondMaterial,Expressid ) {
     
         prepickedSubset.push(subs)
         console.log("subs", prepickedSubset)
+
+ 
     
        
 
