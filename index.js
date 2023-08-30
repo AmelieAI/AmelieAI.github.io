@@ -6410,12 +6410,12 @@ async function setNewPosition (event, furnitureMeshes) {
     blob = new Blob([dataFurn]);
 
 
-    const file = new File([blob], "./Bett7.ifc");
+    const file = new File([blob], "./DINable.ifc");
 
 
     const downloadbutton = document.getElementById('download-button')
     const link = document.createElement('a');
-    link.download = './Bett7.ifc';
+    link.download = './DINable.ifc';
     link.href = URL.createObjectURL(file);
 
 
