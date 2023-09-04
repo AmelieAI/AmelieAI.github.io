@@ -100456,7 +100456,11 @@ window.addEventListener( 'keydown', function ( event ) {
 
              case 82: // R
                 gumball.setRotationSnap( MathUtils.degToRad( 90 ) );
-                gumball.showY = ! gumball.showY;
+
+                gumball.showY = !gumball.showY;
+                gumball.showZ =  !gumball.showZ;
+                gumball.showX =  !gumball.showX;
+
                 gumball.setMode( 'rotate' );
 
                 
@@ -100576,7 +100580,7 @@ window.addEventListener( 'keydown', function ( event ) {
 
             console.log("Found1",areas[lastIndex].uuid, specificFurnIDList[2].value, translationList);
         
-            if(areas[lastIndex].uuid === specificFurnIDList[2].value){
+            if(areas[lastIndex].uuid === specificFurnIDList[2].value || areas[lastIndex].uuid === specificFurnIDList[0].value){
             const occurs = translationList.includes(areas[lastIndex].uuid );
             console.log("cbt1", counter, occurs);
             if(occurs){
@@ -101014,6 +101018,8 @@ gumball.addEventListener('dragging-changed', function (event) {
 });
 gumball.setSize(0.5);
 gumball.showY = ! gumball.showY;
+gumball.showZ =  gumball.showZ;
+gumball.showX =  gumball.showX;
 
 //////////////////////////////////////////////////
 //GUI for Clippingplane
