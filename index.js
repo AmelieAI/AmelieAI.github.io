@@ -2163,7 +2163,9 @@ window.addEventListener( 'keydown', function ( event ) {
 
             case 84: // T
                 gumball.setMode( 'translate' );
-                gumball.showY = ! gumball.showY;
+                gumball.showY = false;
+                gumball.showZ =  true;
+                gumball.showX =  true;
                 break;
 
             case 69: // E
@@ -2177,8 +2179,8 @@ window.addEventListener( 'keydown', function ( event ) {
                 gumball.setRotationSnap( MathUtils.degToRad( 90 ) );
 
                 gumball.showY = !gumball.showY;
-                gumball.showZ =  !gumball.showZ;
-                gumball.showX =  !gumball.showX;
+                gumball.showZ =  false;
+                gumball.showX =  false;
 
                 gumball.setMode( 'rotate' );
 
@@ -2278,22 +2280,7 @@ window.addEventListener( 'keydown', function ( event ) {
         }
         //console.log("ReferenceDirectionsAreas2", ReferenceDirectionsAreas, ReferenceDirections)
         switch ( event.keyCode ) {
-                case 82:
-                    // const spherePos = allSubsetMeshes[lastIndex].children[0].getWorldPosition(new Vector3())
-                    // const vectorDir = new Vector3( areas[lastIndex].position.z - spherePos.z ,areas[lastIndex].position.x - spherePos.x , 0)
-                    // console.log( "R else", areas[lastIndex].uuid, spherePos, vectorDir.normalize())
-                    
-                    
-                    // modifiedDirections[lastIndex] = vectorDir.normalize()
-
-              
-                 
-                    
-                   
-                    //console.log("area" ,ReferenceDirectionsAreas[lastIndex], areaRef,areas[lastIndex], areas[lastIndex].quaternion.w.toFixed(2))
                 
-                    //console.log('modif', modifiedDirections, spherePos, vectorDir.normalize(), areas[lastIndex], ReferenceDirections, lastIndex)
-                    break;
 
             case 16: // Shift
                 gumball.setTranslationSnap( null );
