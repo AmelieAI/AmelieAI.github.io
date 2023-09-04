@@ -100210,77 +100210,7 @@ document.querySelectorAll('button').forEach(occurence => {
         //rotateOtherAreasAroundFurnitureIfCollision(noSpecificFurnIDList, 1.5)
         
       
-        function translateAreaIfCollision(specificFurnIDList, a, moveX, moveZ){
-            //console.log("noSpecificFurnIDList", noSpecificFurnIDList)
-
-            for(let id = 0; id < specificFurnIDList.length; id++) {
-                //console.log("ID WC!!!!!", specificFurnIDList[a], lastIndex)
-                if( IntersectionsIDsAreaIntersectArea.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDsAreaContainArea.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDsFurnIntersectFurn.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDsFurnContainFurn.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDs.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDsFurnIntersectArea.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDsFurnContainArea.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDsAreaIntersectWall.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDsAreaContainWall.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDsFurnIntersectWall.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDsFurnContainWall.includes(specificFurnIDList[a].value) === true ||
-                    IntersectionsIDsAreaContainFurn.includes(specificFurnIDList[a].value) === true ) {
-
-
-                    
-
-
-                        for (let i = 0; i < areas.length; i++){
-
-                            if(areas[i].uuid === specificFurnIDList[a].value) {
-                                    indexWC = i;
-                                    //console.log("ID is WC!!!!!", specificFurnIDList[a].value, areas[i], ReferenceDirections[i], lastPosition, indexWC)
-                                    
-                                }
-
-                            }
-                }else {
-                    return
-                }
-            }
-
-                    lastPosition = areas[indexWC].position;
-                    //console.log("Pos", lastPosition, ReferenceDirections[indexWC],  areas[indexWC])
-                    if(ReferenceDirections[indexWC].x === -1 ){
-                        areas[indexWC].position.set(lastPosition.x + moveX,lastPosition.y ,lastPosition.z );
-                        translationList.push(areas[indexWC].uuid);
-
-                        areas[indexWC].geometry.boundingBox;
-                        // const boxhelper = new BoxHelper(areas[indexWC], 0x000000)
-                        // scene.add(boxhelper)
-
-                    }
-                    if(ReferenceDirections[indexWC].x === 1){
-                        areas[indexWC].position.set(lastPosition.x + moveX,lastPosition.y ,lastPosition.z );
-                        areas[indexWC].geometry.boundingBox;
-                        translationList.push(areas[indexWC].uuid);
-                        // const boxhelper = new BoxHelper(areas[indexWC], 0x000000)
-                        // scene.add(boxhelper)
-
-                    }
-                    if(ReferenceDirections[indexWC].y === -1){
-                        areas[indexWC].position.set(lastPosition.x,lastPosition.y ,lastPosition.z + moveZ);
-                        areas[indexWC].geometry.boundingBox;
-                        translationList.push(areas[indexWC].uuid);
-                       
-
-                    }
-                    if(ReferenceDirections[indexWC].y === 1){
-                        areas[indexWC].position.set(lastPosition.x,lastPosition.y ,lastPosition.z + moveZ);
-                        areas[indexWC].geometry.boundingBox;
-                        translationList.push(areas[indexWC].uuid);
-                        
-                    }
-
-
-        }
+   
 
         //console.log("Blue, IntersectionsIDsAreaIntersectArea", IntersectionsIDsAreaIntersectArea, IntersectionsIDsAreaIntersectAreaInFront)
         //console.log("lila, IntersectionsIDsAreaContainArea", IntersectionsIDsAreaContainArea)
@@ -100514,6 +100444,7 @@ window.addEventListener( 'keydown', function ( event ) {
 
             case 84: // T
                 gumball.setMode( 'translate' );
+                gumball.showY = ! gumball.showY;
                 break;
 
             case 69: // E
@@ -100525,6 +100456,7 @@ window.addEventListener( 'keydown', function ( event ) {
 
              case 82: // R
                 gumball.setRotationSnap( MathUtils.degToRad( 90 ) );
+                gumball.showY = ! gumball.showY;
                 gumball.setMode( 'rotate' );
 
                 
@@ -100559,20 +100491,6 @@ window.addEventListener( 'keydown', function ( event ) {
                 console.log("ReferenceDirectionsAreasR", ReferenceDirectionsAreas, ReferenceDirections, lastIndex, areas, modifiedDirections);
 
                 break;
-               
-
-        //     case 67: // C
-        //         const position = currentCamera.position.clone();
-
-        //         currentCamera = currentCamera.isPerspectiveCamera ? cameraOrtho : cameraPersp;
-        //         currentCamera.position.copy( position );
-
-        //         orbit.object = currentCamera;
-        //         control.camera = currentCamera;
-
-        //         currentCamera.lookAt( orbit.target.x, orbit.target.y, orbit.target.z );
-        //         onWindowResize();
-        //         break;
 
         //     case 86: // V
         //         const randomFoV = Math.random() + 0.1;
@@ -100621,9 +100539,10 @@ window.addEventListener( 'keydown', function ( event ) {
 
     } );
 
-
-    window.addEventListener( 'keyup', function ( event ) {
         
+    let counter = 0;
+    window.addEventListener( 'keyup', function ( event ) {
+
         for(let i = 0; i < ReferenceDirectionsAreas.length; i++) {
             ReferenceDirectionsAreas[i].normalize();
         }
@@ -100651,13 +100570,209 @@ window.addEventListener( 'keydown', function ( event ) {
                 gumball.setRotationSnap( null );
                 gumball.setScaleSnap( null );
                 break;
+            
+            
+            case 69: // E
+
+            console.log("Found1",areas[lastIndex].uuid, specificFurnIDList[2].value, translationList);
+        
+            if(areas[lastIndex].uuid === specificFurnIDList[2].value){
+            const occurs = translationList.includes(areas[lastIndex].uuid );
+            console.log("cbt1", counter, occurs);
+            if(occurs){
+                counter -= 1;
+                        if(counter === -2){
+        
+                            console.log("cbt-2", counter);
+                            translateAreaPush(lastIndex, -0.6,-0.6, -0.3, -0.3);
+                            counter += 1;
+                        } else if (counter === -1){
+                            translateAreaPush(lastIndex, 0.6,0.6, 0.3, 0.3);
+                            counter += 2;
+                        }
+                        else if (counter === 0){
+                            translateAreaPush(lastIndex, -0.6,-0.6,- 0.3,- 0.3);
+                            
+                        }
+            } 
+            if(!occurs) {
+                counter -= 1;
+                        if(counter === -2){
+        
+                            console.log("cbt-2", counter);
+                            translateAreaPush(lastIndex, 0.6,0.6, 0.3, 0.3);
+                            counter += 1;
+                        } else if (counter === -1){
+                            translateAreaPush(lastIndex, -0.6,-0.6, -0.3, -0.3);
+                            counter += 2;
+                        }
+                        else if (counter === 0){
+                            translateAreaPush(lastIndex, 0.6,0.6, 0.3, 0.3);
+                            
+                        }
+
+            }
+        }
+
+            // for (let i = 0; i < translationList.length; i++) {
+            //     if(translationList[i] !== areas[lastIndex].uuid){
+            //         counter -= 1;
+            //         if(counter === -2){
+    
+            //             console.log("cbt-2", counter)
+            //             translateAreaPush(lastIndex, 0.6,0.6, 0.3, 0.3)
+            //             counter += 1
+            //         } else if (counter === -1){
+            //             translateAreaPush(lastIndex, -0.6,-0.6, -0.3, -0.3)
+            //             counter += 2;
+            //         }
+            //         else if (counter === 0){
+            //             translateAreaPush(lastIndex, 0.6,0.6, 0.3, 0.3)
+                        
+            //         }
+            //     } else if(translationList[i] === areas[lastIndex].uuid){
+            //         counter -= 1;
+            //         if(counter === -2){
+    
+            //             console.log("cbt-2", counter)
+            //             translateAreaPush(lastIndex, -0.6,-0.6, -0.3, -0.3)
+            //             counter += 1
+            //         } else if (counter === -1){
+            //             translateAreaPush(lastIndex, 0.6,0.6, 0.3, 0.3)
+            //             counter += 2;
+            //         }
+            //         else if (counter === 0){
+            //             translateAreaPush(lastIndex, -0.6,-0.6,- 0.3,- 0.3)
+                        
+            //         }
+            //     }
+            // }
+                
+ 
+           
+            // if(counter === 0) {
+            //     translateAreaPush(lastIndex, 0.6,0.6, 0.3, 0.3)
+            //     counter += 1
+            // }
+            console.log("cbt2", counter);
+            
+            // if(translationList.length > 2 ){
+            //     translateAreaPush(lastIndex, 0.6,0.6, 0.3, 0.3)
+
+            // }
+            // else {
+
+            //     break;
+            // }
+                       
+                
+                
+                break;
+               
+     
 
         }
+        
 
     } );
 
 
-			
+    function translateAreaPush(lastIndex, moveX, moveZ, moveX2, moveZ2){
+        if(areas[lastIndex].uuid === specificFurnIDList[2].value){
+            console.log("Found2",areas[lastIndex].uuid, specificFurnIDList[2].value );
+        
+            indexWC = lastIndex;
+            lastPosition = areas[indexWC].position;
+            //console.log("Pos", lastPosition, ReferenceDirections[indexWC],  areas[indexWC])
+            if(ReferenceDirections[indexWC].x === -1 ){
+                areas[indexWC].children[0].translateX(moveX);
+                
+
+                //areas[indexWC].position.set(lastPosition.x + moveX,lastPosition.y ,lastPosition.z )
+                translationList.push(areas[indexWC].uuid);
+
+                areas[indexWC].geometry.boundingBox;
+                // const boxhelper = new BoxHelper(areas[indexWC], 0x000000)
+                // scene.add(boxhelper)
+
+            }
+            if(ReferenceDirections[indexWC].x === 1){
+
+                areas[indexWC].children[0].translateX(moveX);
+               // areas[indexWC].position.set(lastPosition.x + moveX,lastPosition.y ,lastPosition.z )
+                areas[indexWC].geometry.boundingBox;
+                translationList.push(areas[indexWC].uuid);
+                // const boxhelper = new BoxHelper(areas[indexWC], 0x000000)
+                // scene.add(boxhelper)
+
+            }
+            if(ReferenceDirections[indexWC].y === -1){
+                areas[indexWC].children[0].translateZ(moveZ);
+                //areas[indexWC].position.set(lastPosition.x,lastPosition.y ,lastPosition.z + moveZ)
+                areas[indexWC].geometry.boundingBox;
+                translationList.push(areas[indexWC].uuid);
+               
+
+            }
+            if(ReferenceDirections[indexWC].y === 1){
+                areas[indexWC].children[0].translateZ(moveZ);
+                //areas[indexWC].position.set(lastPosition.x,lastPosition.y ,lastPosition.z + moveZ)
+                areas[indexWC].geometry.boundingBox;
+                translationList.push(areas[indexWC].uuid);
+                
+            }
+
+    
+        }
+        else if(areas[lastIndex].uuid === specificFurnIDList[0].value){
+                console.log("Found2",areas[lastIndex], specificFurnIDList[0].value );
+             
+                indexWC = lastIndex;
+                lastPosition = areas[indexWC].position;
+                //console.log("Pos", lastPosition, ReferenceDirections[indexWC],  areas[indexWC])
+                if(ReferenceDirections[indexWC].x === -1 ){
+                    areas[indexWC].children[0].translateX(moveX2); 
+                    //areas[indexWC].position.set(lastPosition.x + moveX2,lastPosition.y ,lastPosition.z )
+                    translationList.push(areas[indexWC].uuid);
+    
+                    areas[indexWC].geometry.boundingBox;
+                    // const boxhelper = new BoxHelper(areas[indexWC], 0x000000)
+                    // scene.add(boxhelper)
+    
+                }
+                if(ReferenceDirections[indexWC].x === 1){
+                    
+                    areas[indexWC].children[0].translateX(moveX2); 
+                    //areas[indexWC].position.set(lastPosition.x + moveX2,lastPosition.y ,lastPosition.z )
+                    areas[indexWC].geometry.boundingBox;
+                    translationList.push(areas[indexWC].uuid);
+                    // const boxhelper = new BoxHelper(areas[indexWC], 0x000000)
+                    // scene.add(boxhelper)
+    
+                }
+                if(ReferenceDirections[indexWC].y === -1){
+                    areas[indexWC].children[0].translateZ(moveZ2); 
+                    //areas[indexWC].position.set(lastPosition.x,lastPosition.y ,lastPosition.z + moveZ2)
+                    areas[indexWC].geometry.boundingBox;
+                    translationList.push(areas[indexWC].uuid);
+                   
+    
+                }
+                if(ReferenceDirections[indexWC].y === 1){
+                    areas[indexWC].children[0].translateZ(moveZ2); 
+                    //areas[indexWC].position.set(lastPosition.x,lastPosition.y ,lastPosition.z + moveZ2)
+                    areas[indexWC].geometry.boundingBox;
+                    translationList.push(areas[indexWC].uuid);
+                    
+                }
+    
+            //translateAreaIfCollision(specificFurnIDList, 0, -0.3, -0.3)
+        } 
+        else {
+            return
+        }
+
+    }
 
 function boundingBoxes(meshes){
     ////console.log(meshes)
@@ -100753,6 +100868,8 @@ const animate = () => {
             newColorForCollidingArea(IntersectionsIDsFurnContainWall,IntersectionsIDsFurnContainWallWith, furnContainFurnColor);
 
 
+            // translateAreaIfCollision(specificFurnIDList, 2, 0.6, 0.6)
+            // translateAreaIfCollision(specificFurnIDList, 0, 0.3, 0.3)
 
             //makes Areas grey if there is no intersection
             for(let id = 0; id < allIDsInChecker.length; id++) {
@@ -100896,6 +101013,7 @@ gumball.addEventListener('dragging-changed', function (event) {
 
 });
 gumball.setSize(0.5);
+gumball.showY = ! gumball.showY;
 
 //////////////////////////////////////////////////
 //GUI for Clippingplane
@@ -102151,6 +102269,77 @@ async function pick(event, material, getProps,ifcModels ) {
     }
 
 
+
+
+}
+function translateAreaIfCollision(specificFurnIDList, a, moveX, moveZ){
+    //console.log("noSpecificFurnIDList", noSpecificFurnIDList)
+
+    for(let id = 0; id < specificFurnIDList.length; id++) {
+        //console.log("ID WC!!!!!", specificFurnIDList[a], lastIndex)
+        if( IntersectionsIDsAreaIntersectArea.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDsAreaContainArea.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDsFurnIntersectFurn.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDsFurnContainFurn.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDs.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDsFurnIntersectArea.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDsFurnContainArea.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDsAreaIntersectWall.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDsAreaContainWall.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDsFurnIntersectWall.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDsFurnContainWall.includes(specificFurnIDList[a].value) === true ||
+            IntersectionsIDsAreaContainFurn.includes(specificFurnIDList[a].value) === true ) {
+
+
+            
+
+
+                for (let i = 0; i < areas.length; i++){
+
+                    if(areas[i].uuid === specificFurnIDList[a].value) {
+                            indexWC = i;
+                            //console.log("ID is WC!!!!!", specificFurnIDList[a].value, areas[i], ReferenceDirections[i], lastPosition, indexWC)
+                            
+                        }
+
+                    }
+        }else {
+            return
+        }
+    }
+
+            lastPosition = areas[indexWC].position;
+            //console.log("Pos", lastPosition, ReferenceDirections[indexWC],  areas[indexWC])
+            if(ReferenceDirections[indexWC].x === -1 ){
+                areas[indexWC].position.set(lastPosition.x + moveX,lastPosition.y ,lastPosition.z );
+                translationList.push(areas[indexWC].uuid);
+
+                areas[indexWC].geometry.boundingBox;
+                // const boxhelper = new BoxHelper(areas[indexWC], 0x000000)
+                // scene.add(boxhelper)
+
+            }
+            if(ReferenceDirections[indexWC].x === 1){
+                areas[indexWC].position.set(lastPosition.x + moveX,lastPosition.y ,lastPosition.z );
+                areas[indexWC].geometry.boundingBox;
+                translationList.push(areas[indexWC].uuid);
+                // const boxhelper = new BoxHelper(areas[indexWC], 0x000000)
+                // scene.add(boxhelper)
+
+            }
+            if(ReferenceDirections[indexWC].y === -1){
+                areas[indexWC].position.set(lastPosition.x,lastPosition.y ,lastPosition.z + moveZ);
+                areas[indexWC].geometry.boundingBox;
+                translationList.push(areas[indexWC].uuid);
+               
+
+            }
+            if(ReferenceDirections[indexWC].y === 1){
+                areas[indexWC].position.set(lastPosition.x,lastPosition.y ,lastPosition.z + moveZ);
+                areas[indexWC].geometry.boundingBox;
+                translationList.push(areas[indexWC].uuid);
+                
+            }
 
 
 }
